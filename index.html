@@ -1,77 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Capture Photo</title>
-    <style>
-        body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            font-family: Arial, sans-serif;
-        }
-        .container {
-            text-align: center;
-        }
-        video, canvas {
-            display: block;
-            margin: 10px auto;
-        }
-        button {
-            margin: 10px;
-            padding: 10px 20px;
-            font-size: 16px;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <video id="video" width="640" height="480" autoplay></video>
-        <button id="snap">Snap Photo</button>
-        <canvas id="canvas" width="640" height="480"></canvas>
-        <button id="upload">Upload Photo</button>
-    </div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+
+     <face-liveness></face-liveness>
+
+     <script src="https://unpkg.com/@regulaforensics/vp-frontend-face-components@latest/dist/main.js"></script>
     <script>
-        const video = document.getElementById('video');
-        const canvas = document.getElementById('canvas');
-        const context = canvas.getContext('2d');
-        const snap = document.getElementById('snap');
-        const upload = document.getElementById('upload');
+      const component = document.getElementsByTagName("face-liveness")[0];
 
-        navigator.mediaDevices.getUserMedia({ video: true })
-            .then(stream => {
-                video.srcObject = stream;
-            })
-            .catch(err => {
-                console.error("Error accessing the camera: " + err);
-            });
+      component.settings = {
+        locale: "ar",
+        copyright: false,
+        cameraId: null,
+        changeCamera: false,
+        startScreen: true,
+        closeDisabled: true,
+        finishScreen: true,
+        // url: "https://your-server.com",
+        // headers: {
+        //   Authorization: "Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==",
+        // },
+        tag: "sessionIdValue",
+        retryCount: 5,
+        recordingProcess: 1,
+        livenessType:0,
+        customization: {
+        //   fontFamily: "Noto Sans, sans-serif",
+          fontSize: "16px",
+          onboardingScreenStartButtonBackground: "#7E57C5",
+          onboardingScreenStartButtonBackgroundHover: "#7c45b4",
+          onboardingScreenStartButtonTitle: "#FFFFFF",
+          onboardingScreenStartButtonTitleHover: "#FFFFFF",
+          cameraScreenFrontHintLabelBackground: "#E8E8E8",
+        //   onboardingScreenIllumination: "https://path-to-image.com",
+        //   onboardingScreenAccessories: "data:image/svg+xml;base64,PHN2...",
+        //   onboardingScreenCameraLevel: importedImage,
+          cameraScreenFrontHintLabelText: "#000000",
+          cameraScreenSectorActive: "#7E57C5",
+          cameraScreenSectorTarget: "#BEABE2",
+          cameraScreenStrokeNormal: "#7E57C5",
+          processingScreenProgress: "#7E57C5",
+          retryScreenRetryButtonBackground: "#7E57C5",
+          retryScreenRetryButtonBackgroundHover: "#7c45b4",
+          retryScreenRetryButtonTitle: "#FFFFFF",
+          retryScreenRetryButtonTitleHover: "#FFFFFF",
+        //   retryScreenEnvironmentImage: "https://path-to-image.com",
+        //   retryScreenPersonImage: "data:image/svg+xml;base64,PHN2...",
+        //   successScreenImage: importedImage,
+        },
+      };
 
-        snap.addEventListener('click', () => {
-            context.drawImage(video, 0, 0, canvas.width, canvas.height);
-        });
+      component.addEventListener('face-liveness', (event) => console.log(event.detail)); // event listener for face-liveness component
 
-        upload.addEventListener('click', () => {
-            canvas.toBlob(blob => {
-                const formData = new FormData();
-                formData.append('image', blob, 'photo.png');
-
-                fetch('YOUR_POST_URL_HERE', {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    console.log('Success:', data);
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-            }, 'image/png');
-        });
     </script>
-</body>
+  </body>
 </html>
